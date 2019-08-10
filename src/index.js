@@ -17,8 +17,8 @@ const DEFAULT_OPTIONS = {
     '!**/index.md',
     '!**/index.mdx',
   ],
-  docLayoutComponent: '@theme/DocLegacyPage',
-  docItemComponent: '@theme/DocLegacyItem',
+  docLayoutComponent: '@theme/AdrPage',
+  docItemComponent: '@theme/AdrItem',
   remarkPlugins: [],
   rehypePlugins: [],
 }
@@ -30,6 +30,10 @@ module.exports = function(context, opts) {
 
   return {
     name: 'docusaurus-plugin-content-adrs',
+
+    getThemePath() {
+      return path.resolve(__dirname, './theme')
+    },
 
     contentPath,
 
@@ -92,9 +96,9 @@ module.exports = function(context, opts) {
       })
 
       globalContents = {
-        docs: adrs,
-        docsDir: adrsDir,
-        docsSidebars: adrsSidebars,
+        adrs,
+        adrsDir,
+        adrsSidebars,
         sourceToPermalink,
         permalinkToId,
       }
@@ -111,7 +115,7 @@ module.exports = function(context, opts) {
       const { addRoute, createData } = actions
 
       const routes = await Promise.all(
-        Object.values(content.docs).map(async metadataItem => {
+        Object.values(content.adrs).map(async metadataItem => {
           const metadataPath = await createData(
             `${docuHash(metadataItem.permalink)}.json`,
             JSON.stringify(metadataItem, null, 2),
@@ -142,7 +146,7 @@ module.exports = function(context, opts) {
         component: docLayoutComponent,
         routes,
         modules: {
-          docsMetadata: adrsMetadataPath,
+          adrsMetadata: adrsMetadataPath,
         },
       })
     },
